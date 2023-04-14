@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'taskManager.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'main.dart';
 
 class Task {
   late String typeName; //例：勉強など
@@ -45,17 +47,31 @@ class Task {
     }
     return duration;
   }
+}
 
-  static Container showCard({
-    required String title,
-    required String memo,
-    required String startTimeStr,
-    required String endTimeStr,
-    required String startDateStr,
-    required String endDateStr,
-    bool isImmutableHeight = false,
-  }) {
-    double duration = _makeDuration(
+class ShowCard extends ConsumerWidget {
+  ShowCard({
+    super.key,
+    required this.title,
+    required this.memo,
+    required this.startTimeStr,
+    required this.endTimeStr,
+    required this.startDateStr,
+    required this.endDateStr,
+    this.isImmutableHeight = false,
+  });
+
+  String title;
+  String memo;
+  String startTimeStr;
+  String endTimeStr;
+  String startDateStr;
+  String endDateStr;
+  bool isImmutableHeight;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    double duration = Task._makeDuration(
         startTimeStr: startTimeStr,
         endTimeStr: endTimeStr,
         startDateStr: startDateStr,
@@ -63,10 +79,7 @@ class Task {
     if (isImmutableHeight == true) {
       duration = 80;
     }
-    if (startDateStr == endDateStr) {
-      endDateStr = '';
-    }
-
+    var taskTypeMap = ref.watch(taskTypeMapProvider);
     return Container(
         padding: const EdgeInsets.fromLTRB(14, 6, 14, 6), //cardの内側の余白
         height: duration,
@@ -80,7 +93,7 @@ class Task {
             ],
             borderRadius: BorderRadius.circular(14),
             gradient: LinearGradient(
-                colors: TaskManarger().typeMap[title],
+                colors: taskTypeMap[title],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight)),
         child: Row(

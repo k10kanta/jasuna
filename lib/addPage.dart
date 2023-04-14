@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:jasuna/task.dart';
 import 'main.dart';
 import 'task.dart';
 import 'taskManager.dart';
@@ -23,7 +22,7 @@ class AddPage extends ConsumerWidget {
     final taskEndTimeHour = ref.watch(taskEndTimeHourProvider);
     final taskEndTimeMinute = ref.watch(taskEndTimeMinuteProvider);
 
-    var usersShedulerObj = UsersSheduler();
+    final userShedule = ref.read(userSheduleProvider);
 
     return Scaffold(
         appBar: AppBar(
@@ -60,7 +59,7 @@ class AddPage extends ConsumerWidget {
                   const SizedBox(
                     height: 12,
                   ),
-                  Task.showCard(
+                  ShowCard(
                     //プレビュー部分 選択中のタスクになるように今後状態管理する
                     title: addTaskName,
                     memo: addTaskMemo,
@@ -239,15 +238,18 @@ class AddPage extends ConsumerWidget {
                   ElevatedButton(
                       //完了ボタン
                       onPressed: () {
-                        usersShedulerObj.shedule.add(Task(
+                        userShedule.add(Task(
                             addTaskName,
                             addTaskMemo,
                             '$taskStartTimeHour:$taskStartTimeMinute',
                             '$taskEndTimeHour:$taskEndTimeMinute',
                             taskStartDate,
                             taskEndDate));
+                        ref.read(userSheduleProvider.notifier).state = [
+                          ...userShedule
+                        ];
                         Navigator.pop(context);
-                        print(usersShedulerObj.shedule);
+                        print(userShedule);
                       },
                       style: ButtonStyle(
                         minimumSize:
@@ -343,11 +345,12 @@ class ShowTaskTypeList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var taskTypeMap = ref.watch(taskTypeMapProvider);
     return ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: TaskManarger().typeMap.length,
+        itemCount: taskTypeMap.length,
         itemBuilder: ((context, index) {
-          var key = TaskManarger().typeMap.keys.elementAt(index);
+          var key = taskTypeMap.keys.elementAt(index);
           return InkWell(
             onTap: () {
               ref.read(addTaskNameProvider.notifier).update((state) => key);
@@ -362,7 +365,7 @@ class ShowTaskTypeList extends ConsumerWidget {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         gradient: LinearGradient(
-                            colors: TaskManarger().typeMap[key],
+                            colors: taskTypeMap[key],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight)),
                   ),
@@ -384,8 +387,8 @@ class CreateNewTypeWindow extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectColorName = ref.watch(selectedNewTypeColorNameProvider);
     final newTaskName = ref.watch(newTaskNameProvider);
-    var typeMapObj = TaskManarger().typeMap;
     var colorMapObj = TaskManarger().colorMap;
+    var taskTypeMap = ref.read(taskTypeMapProvider);
 
     return GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(), //textFieldのfocusを外す
@@ -460,10 +463,13 @@ class CreateNewTypeWindow extends ConsumerWidget {
                 const SizedBox(height: 12),
                 ElevatedButton(
                   onPressed: () {
-                    typeMapObj[newTaskName] = colorMapObj[selectColorName];
+                    taskTypeMap[newTaskName] = colorMapObj[selectColorName];
+                    ref.read(taskTypeMapProvider.notifier).state = {
+                      ...taskTypeMap
+                    };
                     Navigator.pop(context);
                     print(selectColorName);
-                    print(typeMapObj);
+                    print(taskTypeMap);
                   },
                   child: const Text('完了'),
                 ),

@@ -69,31 +69,4 @@ class TaskManarger {
       Color.fromRGBO(223, 165, 121, 1),
     ],
   };
-  late Map typeMap = {
-    //デフォルトのタイプをここで定義する
-    "勉強": const [
-      Color.fromRGBO(79, 172, 254, 1),
-      Color.fromRGBO(0, 242, 254, 1),
-    ],
-    "仕事": const [
-      Color.fromRGBO(255, 8, 68, 1),
-      Color.fromRGBO(255, 177, 153, 1),
-    ],
-    "運動": const [
-      Color.fromRGBO(102, 126, 234, 1),
-      Color.fromRGBO(118, 75, 162, 1),
-    ],
-    "遊び": const [
-      Color.fromRGBO(250, 112, 154, 1),
-      Color.fromRGBO(254, 225, 64, 1),
-    ],
-    "ゆったり": const [
-      Color.fromRGBO(155, 225, 93, 1),
-      Color.fromRGBO(0, 227, 174, 1),
-    ],
-    "睡眠": const [
-      Color.fromRGBO(30, 60, 114, 1),
-      Color.fromRGBO(42, 82, 152, 1),
-    ],
-  };
 }

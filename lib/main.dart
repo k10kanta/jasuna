@@ -52,6 +52,46 @@ final taskEndTimeMinuteProvider = StateProvider<String>((ref) {
   return '00';
 });
 
+final userSheduleProvider = StateProvider<List>((ref) => [
+      Task('ゆったり', 'コーヒーのむ', '06:00', '07:00', '3/7', '3/7'),
+      Task('運動', '腕トレ', '07:00', '09:00', '3/7', '3/7'),
+      Task('勉強', '英単語', '09:00', '11:00', '3/7', '3/7'),
+      // Task('勉強', 'Flutter', '11:00', '13:00', '3/7', '3/7'),
+      // Task('遊び', 'ゲーム', '13:00', '17:00', '3/7', '3/7'),
+      // Task('睡眠', '', '23:00', '06:00', "3/7", "3/8"),
+      // Task('遊び', '漫画', '07:00', '07:30', "3/8", "3/8"),
+    ]);
+
+final taskTypeMapProvider = StateProvider<Map>((ref) {
+  return {
+    //デフォルトのタイプをここで定義する
+    "勉強": const [
+      Color.fromRGBO(79, 172, 254, 1),
+      Color.fromRGBO(0, 242, 254, 1),
+    ],
+    "仕事": const [
+      Color.fromRGBO(255, 8, 68, 1),
+      Color.fromRGBO(255, 177, 153, 1),
+    ],
+    "運動": const [
+      Color.fromRGBO(102, 126, 234, 1),
+      Color.fromRGBO(118, 75, 162, 1),
+    ],
+    // "遊び": const [
+    //   Color.fromRGBO(250, 112, 154, 1),
+    //   Color.fromRGBO(254, 225, 64, 1),
+    // ],
+    "ゆったり": const [
+      Color.fromRGBO(155, 225, 93, 1),
+      Color.fromRGBO(0, 227, 174, 1),
+    ],
+    "睡眠": const [
+      Color.fromRGBO(30, 60, 114, 1),
+      Color.fromRGBO(42, 82, 152, 1),
+    ],
+  };
+});
+
 void main() {
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -65,18 +105,18 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'jasuna',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: SchedulePage(),
+      home: const SchedulePage(),
     );
   }
 }
 
-class SchedulePage extends StatelessWidget {
-  SchedulePage({super.key});
-
-  var UesrSchedulerObj = UsersSheduler();
+class SchedulePage extends ConsumerWidget {
+  const SchedulePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    var uesrSchedule = ref.watch(userSheduleProvider);
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -85,13 +125,13 @@ class SchedulePage extends StatelessWidget {
         title: createDateTitle(),
         centerTitle: false,
         actions: [
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.edit,
-                size: 28,
-                color: Colors.black,
-              )),
+          // IconButton(
+          //     onPressed: () {},
+          //     icon: const Icon(
+          //       Icons.edit,
+          //       size: 28,
+          //       color: Colors.black,
+          //     )),
           IconButton(
               onPressed: () async {
                 await Navigator.push(
@@ -111,17 +151,17 @@ class SchedulePage extends StatelessWidget {
             SystemUiOverlayStyle.dark, //時間とかバッテリーとか（ステータスバー）の表示が黒くなる
       ),
       body: ListView.builder(
-        itemCount: UesrSchedulerObj.shedule.length,
+        itemCount: uesrSchedule.length,
         itemBuilder: ((context, index) {
           return Padding(
               padding: const EdgeInsets.fromLTRB(24, 12, 24, 0), //cardの外側の余白
-              child: Task.showCard(
-                title: UesrSchedulerObj.shedule[index].typeName,
-                memo: UesrSchedulerObj.shedule[index].memo,
-                startTimeStr: UesrSchedulerObj.shedule[index].startTimeStr,
-                endTimeStr: UesrSchedulerObj.shedule[index].endTimeStr,
-                startDateStr: UesrSchedulerObj.shedule[index].startDateStr,
-                endDateStr: UesrSchedulerObj.shedule[index].endDateStr,
+              child: ShowCard(
+                title: uesrSchedule[index].typeName,
+                memo: uesrSchedule[index].memo,
+                startTimeStr: uesrSchedule[index].startTimeStr,
+                endTimeStr: uesrSchedule[index].endTimeStr,
+                startDateStr: uesrSchedule[index].startDateStr,
+                endDateStr: uesrSchedule[index].endDateStr,
               ));
         }),
       ),
@@ -202,16 +242,4 @@ class Sheduler {
   void create() {}
 
   void delete() {}
-}
-
-class UsersSheduler extends Sheduler {
-  late List shedule = [
-    Task('ゆったり', 'コーヒーのむ', '06:00', '07:00', '3/7', '3/7'),
-    Task('運動', '腕トレ', '07:00', '09:00', '3/7', '3/7'),
-    Task('勉強', '英単語', '09:00', '11:00', '3/7', '3/7'),
-    Task('勉強', 'Flutter', '11:00', '13:00', '3/7', '3/7'),
-    Task('遊び', 'ゲーム', '13:00', '17:00', '3/7', '3/7'),
-    Task('睡眠', '', '23:00', '06:00', "3/7", "3/8"),
-    Task('遊び', '漫画', '07:00', '07:30', "3/8", "3/8"),
-  ];
 }
