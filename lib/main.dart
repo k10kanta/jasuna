@@ -53,13 +53,13 @@ final taskEndTimeMinuteProvider = StateProvider<String>((ref) {
 });
 
 final userSheduleProvider = StateProvider<List>((ref) => [
-      Task('ゆったり', 'コーヒーのむ', '06:00', '07:00', '3/7', '3/7'),
-      Task('運動', '腕トレ', '07:00', '09:00', '3/7', '3/7'),
-      Task('勉強', '英単語', '09:00', '11:00', '3/7', '3/7'),
-      // Task('勉強', 'Flutter', '11:00', '13:00', '3/7', '3/7'),
-      // Task('遊び', 'ゲーム', '13:00', '17:00', '3/7', '3/7'),
-      // Task('睡眠', '', '23:00', '06:00', "3/7", "3/8"),
-      // Task('遊び', '漫画', '07:00', '07:30', "3/8", "3/8"),
+      // Task('睡眠', '', '23:00', '06:00', '4/23', '4/24'),
+      // Task('ゆったり', 'コーヒーのむ', '06:00', '07:00', '4/24', '4/24'),
+      // Task('移動', '袖ヶ浦 → 筑波🚃', '07:00', '10:00', '4/24', '4/24'),
+      // Task('勉強', '高橋先生 訪問', '11:00', '12:30', '4/24', '4/24'),
+      // Task('ゆったり', '昼食🍔', '12:30', '13:30', '4/24', '4/24'),
+      // Task('勉強', '志築先生 訪問', '13:30', '15:00', '4/24', '4/24'),
+      // Task('移動', '筑波 → 袖ヶ浦🚃', '16:00', '19:00', '4/24', '4/24'),
     ]);
 
 final taskTypeMapProvider = StateProvider<Map>((ref) {
@@ -77,10 +77,10 @@ final taskTypeMapProvider = StateProvider<Map>((ref) {
       Color.fromRGBO(102, 126, 234, 1),
       Color.fromRGBO(118, 75, 162, 1),
     ],
-    // "遊び": const [
-    //   Color.fromRGBO(250, 112, 154, 1),
-    //   Color.fromRGBO(254, 225, 64, 1),
-    // ],
+    "移動": const [
+      Color.fromRGBO(250, 112, 154, 1),
+      Color.fromRGBO(254, 225, 64, 1),
+    ],
     "ゆったり": const [
       Color.fromRGBO(155, 225, 93, 1),
       Color.fromRGBO(0, 227, 174, 1),
@@ -115,8 +115,6 @@ class SchedulePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var uesrSchedule = ref.watch(userSheduleProvider);
-
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -150,21 +148,7 @@ class SchedulePage extends ConsumerWidget {
         systemOverlayStyle:
             SystemUiOverlayStyle.dark, //時間とかバッテリーとか（ステータスバー）の表示が黒くなる
       ),
-      body: ListView.builder(
-        itemCount: uesrSchedule.length,
-        itemBuilder: ((context, index) {
-          return Padding(
-              padding: const EdgeInsets.fromLTRB(24, 12, 24, 0), //cardの外側の余白
-              child: ShowCard(
-                title: uesrSchedule[index].typeName,
-                memo: uesrSchedule[index].memo,
-                startTimeStr: uesrSchedule[index].startTimeStr,
-                endTimeStr: uesrSchedule[index].endTimeStr,
-                startDateStr: uesrSchedule[index].startDateStr,
-                endDateStr: uesrSchedule[index].endDateStr,
-              ));
-        }),
-      ),
+      body: const SchedulePageBody(),
     );
   }
 }
@@ -235,11 +219,36 @@ Row createDateTitle() {
   );
 }
 
-class Sheduler {
-  late String userName;
-  //late List shedule; //taskを並べたもの
+class SchedulePageBody extends ConsumerWidget {
+  const SchedulePageBody({super.key});
 
-  void create() {}
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    var userSchedule = ref.watch(userSheduleProvider);
 
-  void delete() {}
+    if (userSchedule.isEmpty) {
+      return const Center(
+        child: Text(
+          '予定がありません🤔\n右上の➕からあなたの計画を追加しましょう💪',
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.black, fontSize: 16),
+        ),
+      );
+    } else {
+      return ListView.builder(
+          itemCount: userSchedule.length,
+          itemBuilder: ((context, index) {
+            return Padding(
+                padding: const EdgeInsets.fromLTRB(24, 12, 24, 0), //cardの外側の余白
+                child: ShowCard(
+                  title: userSchedule[index].typeName,
+                  memo: userSchedule[index].memo,
+                  startTimeStr: userSchedule[index].startTimeStr,
+                  endTimeStr: userSchedule[index].endTimeStr,
+                  startDateStr: userSchedule[index].startDateStr,
+                  endDateStr: userSchedule[index].endDateStr,
+                ));
+          }));
+    }
+  }
 }

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'taskManager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'main.dart';
 
 class Task {
   late String typeName; //例：勉強など
   late String? memo; //例：英単語
-  //late List<Color> typeColor; //グラデーションにするためにリストで色を指定
   late String startTimeStr;
   late String endTimeStr;
   late String startDateStr;
@@ -34,13 +32,11 @@ class Task {
     double duration = 54; //最小の高さ
 
     if (startDateStr == endDateStr) {
-      duration =
-          (endHour * 60 + endMinute) - (startHour * 60 + startMinute) + 10;
+      duration = (endHour * 60 + endMinute) - (startHour * 60 + startMinute);
     } else if (startMonth == endMonth && startDay != endDay) {
       //タスクが日を跨いでる時
-      duration = ((endHour + 24) * 60 + endMinute) -
-          (startHour * 60 + startMinute) +
-          10;
+      duration =
+          ((endHour + 24) * 60 + endMinute) - (startHour * 60 + startMinute);
     }
     if (duration < 54) {
       duration = 54;
