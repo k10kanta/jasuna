@@ -5,62 +5,75 @@ import 'task.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final selectedNewTypeColorNameProvider = StateProvider.autoDispose((ref) {
-  return "073 Love Kiss";
+  return "073 Love Kiss"; //タスクタイプ追加時の選択中の色
 });
 
 final newTaskNameProvider = StateProvider<String>((ref) {
-  return "";
+  return ""; //タスクタイプ追加時の新しいタスクの名前
 });
 
 final addTaskNameProvider = StateProvider<String>((ref) {
-  return "勉強";
+  return "勉強"; //addPageで追加しようとしているタスクの名前
 });
 
 final addTaskMemoProvider = StateProvider.autoDispose((ref) {
-  return '';
+  return ''; //addPageで追加しようとしているタスクのメモ
 });
 
-final taskStartYearProvider = StateProvider<String>((ref) {
-  return '${DateTime.now().year}';
+final addTaskStartYearProvider = StateProvider<String>((ref) {
+  return '${DateTime.now().year}'; //addPageで追加しようとしているタスクの年
 });
 
-final taskStartDateProvider = StateProvider<String>((ref) {
+final addTaskStartDateProvider = StateProvider<String>((ref) {
   return '${DateTime.now().month}/${DateTime.now().day}';
 });
 
-final taskStartTimeHourProvider = StateProvider<String>((ref) {
+final addTaskStartTimeHourProvider = StateProvider<String>((ref) {
   return '${DateTime.now().hour}';
 });
 
-final taskStartTimeMinuteProvider = StateProvider<String>((ref) {
+final addTaskStartTimeMinuteProvider = StateProvider<String>((ref) {
   return '00';
 });
 
-final taskEndYearProvider = StateProvider<String>((ref) {
+final addTaskEndYearProvider = StateProvider<String>((ref) {
   return '${DateTime.now().year}';
 });
 
-final taskEndDateProvider = StateProvider<String>((ref) {
+final addTaskEndDateProvider = StateProvider<String>((ref) {
   return '${DateTime.now().month}/${DateTime.now().day}';
 });
 
-final taskEndTimeHourProvider = StateProvider<String>((ref) {
+final addTaskEndTimeHourProvider = StateProvider<String>((ref) {
   return '${DateTime.now().hour}';
 });
 
-final taskEndTimeMinuteProvider = StateProvider<String>((ref) {
+final addTaskEndTimeMinuteProvider = StateProvider<String>((ref) {
   return '00';
 });
 
-final userSheduleProvider = StateProvider<List>((ref) => [
-      Task('睡眠', '', '23:00', '06:00', '4/23', '4/24'),
-      Task('ゆったり', 'コーヒーのむ', '06:00', '07:00', '4/24', '4/24'),
-      Task('移動', '袖ヶ浦 → 筑波🚃', '07:00', '10:00', '4/24', '4/24'),
-      Task('勉強', '高橋先生 訪問', '11:00', '12:30', '4/24', '4/24'),
-      Task('ゆったり', '昼食🍔', '12:30', '13:30', '4/24', '4/24'),
-      Task('勉強', '志築先生 訪問', '13:30', '15:00', '4/24', '4/24'),
-      Task('移動', '筑波 → 袖ヶ浦🚃', '16:00', '19:00', '4/24', '4/24'),
-    ]);
+class UserScheduleNotifier extends StateNotifier<List<Task>> {
+  UserScheduleNotifier()
+      : super([
+          Task('睡眠', '', '23:00', '05:00', '4/23', '4/24'),
+          Task('ゆったり', 'コーヒーのむ', '06:00', '07:00', '4/24', '4/24'),
+          Task('移動', '袖ヶ浦 → 筑波🚃', '07:00', '10:00', '4/24', '4/24'),
+          Task('勉強', '高橋先生 訪問', '11:00', '12:30', '4/24', '4/24'),
+          Task('ゆったり', '昼食🍔', '12:30', '13:30', '4/24', '4/24'),
+          Task('勉強', '志築先生 訪問', '13:30', '15:00', '4/24', '4/24'),
+          Task('移動', '筑波 → 袖ヶ浦🚃', '16:00', '19:00', '4/24', '4/24'),
+          Task('ゆったり', '本読む', '05:00', '06:00', '4/24', '4/24'),
+        ]); //スタートタイムとエンドタイムをDateTime型で表したい
+
+  void sortSchedule() {
+    //時系列でソートする
+  }
+}
+
+final userSheduleProvider =
+    StateNotifierProvider<UserScheduleNotifier, List<Task>>((ref) {
+  return UserScheduleNotifier();
+});
 
 final taskTypeMapProvider = StateProvider<Map>((ref) {
   return {
@@ -224,7 +237,7 @@ class SchedulePageBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var userSchedule = ref.watch(userSheduleProvider);
+    List<Task> userSchedule = ref.watch(userSheduleProvider);
 
     if (userSchedule.isEmpty) {
       return const Center(
@@ -263,13 +276,46 @@ class SchedulePageBody extends ConsumerWidget {
                       ),
                     ),
                     //cardの外側の余白
-                    child: ShowCard(
-                      title: userSchedule[index].typeName,
-                      memo: userSchedule[index].memo,
-                      startTimeStr: userSchedule[index].startTimeStr,
-                      endTimeStr: userSchedule[index].endTimeStr,
-                      startDateStr: userSchedule[index].startDateStr,
-                      endDateStr: userSchedule[index].endDateStr,
+                    child: InkWell(
+                      onTap: () async {
+                        ref
+                            .read(addTaskNameProvider.notifier)
+                            .update((state) => userSchedule[index].typeName);
+                        ref
+                            .read(addTaskMemoProvider.notifier)
+                            .update((state) => userSchedule[index].memo);
+                        ref.read(addTaskStartDateProvider.notifier).update(
+                            (state) => userSchedule[index].startDateStr);
+                        ref
+                            .read(addTaskEndDateProvider.notifier)
+                            .update((state) => userSchedule[index].endDateStr);
+                        ref.read(addTaskStartTimeHourProvider.notifier).update(
+                            (state) =>
+                                userSchedule[index].startTimeStr.split(':')[0]);
+                        ref
+                            .read(addTaskStartTimeMinuteProvider.notifier)
+                            .update((state) =>
+                                userSchedule[index].startTimeStr.split(':')[1]);
+                        ref.read(addTaskEndTimeHourProvider.notifier).update(
+                            (state) =>
+                                userSchedule[index].endTimeStr.split(':')[0]);
+                        ref.read(addTaskEndTimeMinuteProvider.notifier).update(
+                            (state) =>
+                                userSchedule[index].endTimeStr.split(':')[1]);
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const AddPage()),
+                        );
+                      },
+                      child: ShowCard(
+                        title: userSchedule[index].typeName,
+                        memo: userSchedule[index].memo,
+                        startTimeStr: userSchedule[index].startTimeStr,
+                        endTimeStr: userSchedule[index].endTimeStr,
+                        startDateStr: userSchedule[index].startDateStr,
+                        endDateStr: userSchedule[index].endDateStr,
+                      ),
                     )));
           }));
     }

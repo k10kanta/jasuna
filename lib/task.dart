@@ -4,7 +4,7 @@ import 'main.dart';
 
 class Task {
   late String typeName; //例：勉強など
-  late String? memo; //例：英単語
+  late String memo; //例：英単語
   late String startTimeStr;
   late String endTimeStr;
   late String startDateStr;
@@ -46,7 +46,7 @@ class Task {
 }
 
 class ShowCard extends ConsumerWidget {
-  ShowCard({
+  const ShowCard({
     super.key,
     required this.title,
     required this.memo,
@@ -57,13 +57,13 @@ class ShowCard extends ConsumerWidget {
     this.isImmutableHeight = false,
   });
 
-  String title;
-  String memo;
-  String startTimeStr;
-  String endTimeStr;
-  String startDateStr;
-  String endDateStr;
-  bool isImmutableHeight;
+  final String title;
+  final String memo;
+  final String startTimeStr;
+  final String endTimeStr;
+  final String startDateStr;
+  final String endDateStr;
+  final bool isImmutableHeight;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -77,48 +77,49 @@ class ShowCard extends ConsumerWidget {
     }
     var taskTypeMap = ref.watch(taskTypeMapProvider);
     return Container(
-        padding: const EdgeInsets.fromLTRB(14, 6, 14, 6), //cardの内側の余白
-        height: duration,
-        decoration: BoxDecoration(
-            boxShadow: const [
-              BoxShadow(
-                  color: Colors.grey,
-                  spreadRadius: 0.1,
-                  blurRadius: 12,
-                  offset: Offset(2, 5))
-            ],
-            borderRadius: BorderRadius.circular(14),
-            gradient: LinearGradient(
-                colors: taskTypeMap[title],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(
-                title,
-                style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
-              ),
-              Text(
-                memo,
-                style: const TextStyle(fontSize: 12, color: Colors.white),
-              ),
-            ]),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text('$startDateStr $startTimeStr',
-                    style: const TextStyle(fontSize: 14, color: Colors.white)),
-                Text('$endDateStr $endTimeStr',
-                    style: const TextStyle(fontSize: 14, color: Colors.white)),
-              ],
-            ),
+      padding: const EdgeInsets.fromLTRB(14, 6, 14, 6), //cardの内側の余白
+      height: duration,
+      decoration: BoxDecoration(
+          boxShadow: const [
+            BoxShadow(
+                color: Colors.grey,
+                spreadRadius: 0.1,
+                blurRadius: 12,
+                offset: Offset(2, 5))
           ],
-        ));
+          borderRadius: BorderRadius.circular(14),
+          gradient: LinearGradient(
+              colors: taskTypeMap[title],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(
+              title,
+              style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold),
+            ),
+            Text(
+              memo,
+              style: const TextStyle(fontSize: 12, color: Colors.white),
+            ),
+          ]),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text('$startDateStr $startTimeStr',
+                  style: const TextStyle(fontSize: 14, color: Colors.white)),
+              Text('$endDateStr $endTimeStr',
+                  style: const TextStyle(fontSize: 14, color: Colors.white)),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

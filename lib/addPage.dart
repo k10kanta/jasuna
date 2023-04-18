@@ -13,16 +13,16 @@ class AddPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final addTaskName = ref.watch(addTaskNameProvider);
     final addTaskMemo = ref.watch(addTaskMemoProvider);
-    final taskStartYear = ref.watch(taskStartYearProvider);
-    final taskStartDate = ref.watch(taskStartDateProvider);
-    final taskStartTimeHour = ref.watch(taskStartTimeHourProvider);
-    final taskStartTimeMinute = ref.watch(taskStartTimeMinuteProvider);
-    final taskEndYear = ref.watch(taskEndYearProvider);
-    final taskEndDate = ref.watch(taskEndDateProvider);
-    final taskEndTimeHour = ref.watch(taskEndTimeHourProvider);
-    final taskEndTimeMinute = ref.watch(taskEndTimeMinuteProvider);
+    final taskStartYear = ref.watch(addTaskStartYearProvider);
+    final taskStartDate = ref.watch(addTaskStartDateProvider);
+    final taskStartTimeHour = ref.watch(addTaskStartTimeHourProvider);
+    final taskStartTimeMinute = ref.watch(addTaskStartTimeMinuteProvider);
+    final taskEndYear = ref.watch(addTaskEndYearProvider);
+    final taskEndDate = ref.watch(addTaskEndDateProvider);
+    final taskEndTimeHour = ref.watch(addTaskEndTimeHourProvider);
+    final taskEndTimeMinute = ref.watch(addTaskEndTimeMinuteProvider);
 
-    final userShedule = ref.read(userSheduleProvider);
+    List<Task> userShedule = ref.read(userSheduleProvider);
 
     return Scaffold(
         appBar: AppBar(
@@ -136,22 +136,22 @@ class AddPage extends ConsumerWidget {
                               maxTime: DateTime(2030, 12, 31),
                               onConfirm: (time) {
                             ref
-                                .read(taskStartDateProvider.notifier)
+                                .read(addTaskStartDateProvider.notifier)
                                 .update((state) => "${time.month}/${time.day}");
                             ref
-                                .read(taskStartTimeHourProvider.notifier)
+                                .read(addTaskStartTimeHourProvider.notifier)
                                 .update((state) => "${time.hour}");
                             ref
-                                .read(taskStartTimeMinuteProvider.notifier)
+                                .read(addTaskStartTimeMinuteProvider.notifier)
                                 .update((state) => "${time.minute}");
                             ref
-                                .read(taskEndDateProvider.notifier)
+                                .read(addTaskEndDateProvider.notifier)
                                 .update((state) => "${time.month}/${time.day}");
                             ref
-                                .read(taskEndTimeHourProvider.notifier)
+                                .read(addTaskEndTimeHourProvider.notifier)
                                 .update((state) => "${time.hour}");
                             ref
-                                .read(taskEndTimeMinuteProvider.notifier)
+                                .read(addTaskEndTimeMinuteProvider.notifier)
                                 .update((state) => "${time.minute}");
                           },
                               currentTime: DateTime(
@@ -188,13 +188,13 @@ class AddPage extends ConsumerWidget {
                               maxTime: DateTime(2030, 12, 31),
                               onConfirm: (time) {
                             ref
-                                .read(taskEndDateProvider.notifier)
+                                .read(addTaskEndDateProvider.notifier)
                                 .update((state) => "${time.month}/${time.day}");
                             ref
-                                .read(taskEndTimeHourProvider.notifier)
+                                .read(addTaskEndTimeHourProvider.notifier)
                                 .update((state) => "${time.hour}");
                             ref
-                                .read(taskEndTimeMinuteProvider.notifier)
+                                .read(addTaskEndTimeMinuteProvider.notifier)
                                 .update((state) => "${time.minute}");
                           },
                               currentTime: DateTime(
@@ -248,6 +248,7 @@ class AddPage extends ConsumerWidget {
                         ref.read(userSheduleProvider.notifier).state = [
                           ...userShedule
                         ];
+                        //sortする
                         Navigator.pop(context);
                       },
                       style: ButtonStyle(
@@ -280,8 +281,8 @@ class CreateAddTimeButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final taskEndTimeHour = ref.watch(taskEndTimeHourProvider);
-    final taskEndTimeMinute = ref.watch(taskEndTimeMinuteProvider);
+    final taskEndTimeHour = ref.watch(addTaskEndTimeHourProvider);
+    final taskEndTimeMinute = ref.watch(addTaskEndTimeMinuteProvider);
     int newEndTimeMinute = int.parse(taskEndTimeMinute);
     int newEndTimeHour = int.parse(taskEndTimeHour);
 
@@ -303,21 +304,21 @@ class CreateAddTimeButton extends ConsumerWidget {
                 newEndTimeMinute -= 60;
                 newEndTimeHour += 1;
                 ref
-                    .read(taskEndTimeMinuteProvider.notifier)
+                    .read(addTaskEndTimeMinuteProvider.notifier)
                     .update((state) => state = '$newEndTimeMinute');
                 ref
-                    .read(taskEndTimeHourProvider.notifier)
+                    .read(addTaskEndTimeHourProvider.notifier)
                     .update((state) => state = '$newEndTimeHour');
               } else {
                 ref
-                    .read(taskEndTimeMinuteProvider.notifier)
+                    .read(addTaskEndTimeMinuteProvider.notifier)
                     .update((state) => state = '$newEndTimeMinute');
               }
             } else {
               //追加する単位が時間の時
               newEndTimeHour += addTime;
               ref
-                  .read(taskEndTimeHourProvider.notifier)
+                  .read(addTaskEndTimeHourProvider.notifier)
                   .update((state) => state = '$newEndTimeHour');
             }
           },
