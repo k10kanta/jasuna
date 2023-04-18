@@ -53,13 +53,13 @@ final taskEndTimeMinuteProvider = StateProvider<String>((ref) {
 });
 
 final userSheduleProvider = StateProvider<List>((ref) => [
-      // Task('睡眠', '', '23:00', '06:00', '4/23', '4/24'),
-      // Task('ゆったり', 'コーヒーのむ', '06:00', '07:00', '4/24', '4/24'),
-      // Task('移動', '袖ヶ浦 → 筑波🚃', '07:00', '10:00', '4/24', '4/24'),
-      // Task('勉強', '高橋先生 訪問', '11:00', '12:30', '4/24', '4/24'),
-      // Task('ゆったり', '昼食🍔', '12:30', '13:30', '4/24', '4/24'),
-      // Task('勉強', '志築先生 訪問', '13:30', '15:00', '4/24', '4/24'),
-      // Task('移動', '筑波 → 袖ヶ浦🚃', '16:00', '19:00', '4/24', '4/24'),
+      Task('睡眠', '', '23:00', '06:00', '4/23', '4/24'),
+      Task('ゆったり', 'コーヒーのむ', '06:00', '07:00', '4/24', '4/24'),
+      Task('移動', '袖ヶ浦 → 筑波🚃', '07:00', '10:00', '4/24', '4/24'),
+      Task('勉強', '高橋先生 訪問', '11:00', '12:30', '4/24', '4/24'),
+      Task('ゆったり', '昼食🍔', '12:30', '13:30', '4/24', '4/24'),
+      Task('勉強', '志築先生 訪問', '13:30', '15:00', '4/24', '4/24'),
+      Task('移動', '筑波 → 袖ヶ浦🚃', '16:00', '19:00', '4/24', '4/24'),
     ]);
 
 final taskTypeMapProvider = StateProvider<Map>((ref) {
@@ -239,15 +239,38 @@ class SchedulePageBody extends ConsumerWidget {
           itemCount: userSchedule.length,
           itemBuilder: ((context, index) {
             return Padding(
-                padding: const EdgeInsets.fromLTRB(24, 12, 24, 0), //cardの外側の余白
-                child: ShowCard(
-                  title: userSchedule[index].typeName,
-                  memo: userSchedule[index].memo,
-                  startTimeStr: userSchedule[index].startTimeStr,
-                  endTimeStr: userSchedule[index].endTimeStr,
-                  startDateStr: userSchedule[index].startDateStr,
-                  endDateStr: userSchedule[index].endDateStr,
-                ));
+                padding: const EdgeInsets.fromLTRB(24, 6, 24, 6),
+                child: Dismissible(
+                    key: Key(userSchedule[index].typeName),
+                    onDismissed: (DismissDirection direction) {
+                      userSchedule.removeAt(index);
+                      ref.read(userSheduleProvider.notifier).state = [
+                        ...userSchedule
+                      ];
+                    },
+                    background: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        color: Colors.red,
+                      ),
+                      alignment: Alignment.centerRight,
+                      child: const Padding(
+                        padding: EdgeInsets.all(15),
+                        child: Icon(
+                          Icons.delete,
+                          size: 30,
+                        ),
+                      ),
+                    ),
+                    //cardの外側の余白
+                    child: ShowCard(
+                      title: userSchedule[index].typeName,
+                      memo: userSchedule[index].memo,
+                      startTimeStr: userSchedule[index].startTimeStr,
+                      endTimeStr: userSchedule[index].endTimeStr,
+                      startDateStr: userSchedule[index].startDateStr,
+                      endDateStr: userSchedule[index].endDateStr,
+                    )));
           }));
     }
   }
