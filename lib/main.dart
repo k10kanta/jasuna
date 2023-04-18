@@ -16,7 +16,7 @@ final addTaskNameProvider = StateProvider<String>((ref) {
   return "勉強"; //addPageで追加しようとしているタスクの名前
 });
 
-final addTaskMemoProvider = StateProvider.autoDispose((ref) {
+final addTaskMemoProvider = StateProvider<String>((ref) {
   return ''; //addPageで追加しようとしているタスクのメモ
 });
 
@@ -145,6 +145,25 @@ class SchedulePage extends ConsumerWidget {
           //     )),
           IconButton(
               onPressed: () async {
+                //初期化する
+                ref.read(addTaskNameProvider.notifier).update((state) => "勉強");
+                ref.read(addTaskMemoProvider.notifier).update((state) => "");
+                ref.read(addTaskStartDateProvider.notifier).update(
+                    (state) => '${DateTime.now().month}/${DateTime.now().day}');
+                ref.read(addTaskEndDateProvider.notifier).update(
+                    (state) => '${DateTime.now().month}/${DateTime.now().day}');
+                ref
+                    .read(addTaskStartTimeHourProvider.notifier)
+                    .update((state) => '${DateTime.now().hour}');
+                ref
+                    .read(addTaskStartTimeMinuteProvider.notifier)
+                    .update((state) => "00");
+                ref
+                    .read(addTaskEndTimeHourProvider.notifier)
+                    .update((state) => '${DateTime.now().hour}');
+                ref
+                    .read(addTaskEndTimeMinuteProvider.notifier)
+                    .update((state) => "00");
                 await Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const AddPage()),
@@ -278,6 +297,9 @@ class SchedulePageBody extends ConsumerWidget {
                     //cardの外側の余白
                     child: InkWell(
                       onTap: () async {
+                        //タスクをタップで変更
+                        //現在の情報を持ってaddpageに遷移しているだけ
+                        //変更された時は変更後のタスクを削除する必要がある
                         ref
                             .read(addTaskNameProvider.notifier)
                             .update((state) => userSchedule[index].typeName);

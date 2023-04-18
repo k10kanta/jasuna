@@ -109,6 +109,7 @@ class AddPage extends ConsumerWidget {
                   ),
                   TextField(
                     //memo
+                    controller: TextEditingController(text: addTaskMemo),
                     maxLines: 2,
                     decoration: const InputDecoration(
                         labelText: 'Memo',
