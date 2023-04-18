@@ -249,7 +249,6 @@ class AddPage extends ConsumerWidget {
                           ...userShedule
                         ];
                         Navigator.pop(context);
-                        print(userShedule);
                       },
                       style: ButtonStyle(
                         minimumSize:
@@ -467,9 +466,10 @@ class CreateNewTypeWindow extends ConsumerWidget {
                     ref.read(taskTypeMapProvider.notifier).state = {
                       ...taskTypeMap
                     };
+                    ref
+                        .read(addTaskNameProvider.notifier)
+                        .update((state) => state = newTaskName);
                     Navigator.pop(context);
-                    print(selectColorName);
-                    print(taskTypeMap);
                   },
                   child: const Text('完了'),
                 ),
