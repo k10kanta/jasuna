@@ -30,7 +30,7 @@ class AddPage extends ConsumerWidget {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           toolbarHeight: 40,
-          leading: IconButton(
+          leading: IconButton (
             icon: const Icon(Icons.arrow_back),
             color: Colors.black,
             onPressed: () async {
@@ -137,28 +137,28 @@ class AddPage extends ConsumerWidget {
                               showTitleActions: true,
                               minTime: DateTime(2022, 1, 1),
                               maxTime: DateTime(2030, 12, 31),
-                              currentTime: DateTime.now(), onConfirm: (time) {
+                              currentTime: DateTime.now(),
+                              onConfirm: (time) {
                             ref
                                 .read(addTaskStartDateProvider.notifier)
                                 .update((state) => "${time.month}/${time.day}");
                             ref
                                 .read(addTaskStartTimeHourProvider.notifier)
-                                .update((state) => "${time.hour}");
+                                .update((state) => "${time.hour}".padLeft(2, '0'));// fixed from @Sakatuki_jugyou 2023/04/19 (Wed)  [add .padLeft(2, '0')]
                             ref
                                 .read(addTaskStartTimeMinuteProvider.notifier)
-                                .update((state) => "${time.minute}".padLeft(2,
-                                    '0')); // fixed from @Sakatuki_jugyou 2023/04/19 (Wed)  [add .padLeft(2, '0')]
+                                .update((state) => "${time.minute}".padLeft(2, '0')); // fixed from @Sakatuki_jugyou 2023/04/19 (Wed)  [add .padLeft(2, '0')]
                             ref
                                 .read(addTaskEndDateProvider.notifier)
                                 .update((state) => "${time.month}/${time.day}");
                             ref
                                 .read(addTaskEndTimeHourProvider.notifier)
-                                .update((state) => "${time.hour}");
+                                .update((state) => "${time.hour}".padLeft(2, '0'));// fixed from @Sakatuki_jugyou 2023/04/19 (Wed)  [add .padLeft(2, '0')]
                             ref
                                 .read(addTaskEndTimeMinuteProvider.notifier)
-                                .update((state) => "${time.minute}".padLeft(2,
-                                    '0')); // fixed from @Sakatuki_jugyou 2023/04/19 (Wed)  [add .padLeft(2, '0')]
-                          }, locale: LocaleType.jp);
+                                .update((state) => "${time.minute}".padLeft(2, '0')); // fixed from @Sakatuki_jugyou 2023/04/19 (Wed)  [add .padLeft(2, '0')]
+                          },
+                              locale: LocaleType.jp);
                         },
                         child: Column(children: [
                           Text(
@@ -184,18 +184,19 @@ class AddPage extends ConsumerWidget {
                               showTitleActions: true,
                               minTime: DateTime(2022, 1, 1),
                               maxTime: DateTime(2030, 12, 31),
-                              currentTime: DateTime.now(), onConfirm: (time) {
+                              currentTime: DateTime.now(),
+                              onConfirm: (time) {
                             ref
                                 .read(addTaskEndDateProvider.notifier)
                                 .update((state) => "${time.month}/${time.day}");
                             ref
                                 .read(addTaskEndTimeHourProvider.notifier)
-                                .update((state) => "${time.hour}");
+                                .update((state) => "${time.hour}".padLeft(2, '0'));// fixed from @Sakatuki_jugyou 2023/04/19 (Wed)  [add .padLeft(2, '0')]
                             ref
                                 .read(addTaskEndTimeMinuteProvider.notifier)
-                                .update((state) => "${time.minute}".padLeft(2,
-                                    '0')); // fixed from @Sakatuki_jugyou 2023/04/19 (Wed)  [add .padLeft(2, '0')]
-                          }, locale: LocaleType.jp);
+                                .update((state) => "${time.minute}".padLeft(2, '0'));// fixed from @Sakatuki_jugyou 2023/04/19 (Wed)  [add .padLeft(2, '0')]
+                          },
+                              locale: LocaleType.jp);
                         },
                         child: Column(children: [
                           Text(
@@ -318,23 +319,23 @@ class CreateAddTimeButton extends ConsumerWidget {
                 //60分を超えたら時間に繰り上げる
                 newEndTimeMinute -= 60;
                 newEndTimeHour += 1;
-                ref.read(addTaskEndTimeMinuteProvider.notifier).update(
-                    (state) =>
-                        "${newEndTimeMinute}".toString().padLeft(2, '0'));
+                ref
+                    .read(addTaskEndTimeMinuteProvider.notifier)
+                    .update((state) => "${newEndTimeMinute}".toString().padLeft(2, '0'));
                 ref
                     .read(addTaskEndTimeHourProvider.notifier)
-                    .update((state) => state = '$newEndTimeHour');
+                    .update((state) => state = '$newEndTimeHour'.toString().padLeft(2, '0'));
               } else {
-                ref.read(addTaskEndTimeMinuteProvider.notifier).update(
-                    (state) =>
-                        "${newEndTimeMinute}".toString().padLeft(2, '0'));
+                ref
+                    .read(addTaskEndTimeMinuteProvider.notifier)
+                    .update((state) => "${newEndTimeMinute}".toString().padLeft(2, '0'));
               }
             } else {
               //追加する単位が時間の時
               newEndTimeHour += addTime;
               ref
                   .read(addTaskEndTimeHourProvider.notifier)
-                  .update((state) => state = '$newEndTimeHour');
+                  .update((state) => state = '$newEndTimeHour'.toString().padLeft(2, '0'));
             }
           },
           child: Row(
