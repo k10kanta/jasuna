@@ -109,9 +109,9 @@ class AddPage extends ConsumerWidget {
                     width: double.infinity,
                     child: ShowTaskTypeList(),
                   ),
-                  TextField(
+                  TextFormField(
                     //memo
-                    controller: TextEditingController(text: addTaskMemo),
+                    initialValue: addTaskMemo,
                     maxLines: 2,
                     decoration: const InputDecoration(
                         labelText: 'Memo',
@@ -256,7 +256,6 @@ class AddPage extends ConsumerWidget {
                           ref
                               .read(addTaskIdProvider.notifier)
                               .update((state) => state = addTaskId + 1);
-                          //sortする
                         } else {
                           userShedule.add(Task(
                               addTaskName,
@@ -276,7 +275,6 @@ class AddPage extends ConsumerWidget {
                               .read(changeTaskIdProvider.notifier)
                               .update((state) => state = null);
                         }
-
                         Navigator.pop(context);
                       },
                       style: ButtonStyle(
