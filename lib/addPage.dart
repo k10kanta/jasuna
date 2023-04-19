@@ -192,7 +192,7 @@ class AddPage extends ConsumerWidget {
                                 .update((state) => "${time.hour}");
                             ref
                                 .read(addTaskEndTimeMinuteProvider.notifier)
-                                .update((state) => "${time.minute}".padLeft(2, '0')); // fixed from @Sakatuki_jugyou 2023/04/19 (Wed)  [add .padLeft(2, '0')]
+                                .update((state) => "${time.minute}".padLeft(2, '0'));// fixed from @Sakatuki_jugyou 2023/04/19 (Wed)  [add .padLeft(2, '0')]
                           },
                               locale: LocaleType.jp);
                         },
@@ -296,14 +296,14 @@ class CreateAddTimeButton extends ConsumerWidget {
                 newEndTimeHour += 1;
                 ref
                     .read(addTaskEndTimeMinuteProvider.notifier)
-                    .update((state) => state = '$newEndTimeMinute');
+                    .update((state) => "${newEndTimeMinute}".toString().padLeft(2, '0'));
                 ref
                     .read(addTaskEndTimeHourProvider.notifier)
                     .update((state) => state = '$newEndTimeHour');
               } else {
                 ref
                     .read(addTaskEndTimeMinuteProvider.notifier)
-                    .update((state) => state = '$newEndTimeMinute');
+                    .update((state) => "${newEndTimeMinute}".toString().padLeft(2, '0'));
               }
             } else {
               //追加する単位が時間の時
