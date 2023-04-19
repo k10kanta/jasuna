@@ -3,16 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'main.dart';
 
 class Task {
-  late String typeName; //例：勉強など
+  Task(this.typeName, this.memo, this.startTimeStr, this.endTimeStr,
+      this.startDateStr, this.endDateStr, this.id);
   late String memo; //例：英単語
   late String startTimeStr;
+  late String typeName; //例：勉強など
   late String endTimeStr;
   late String startDateStr;
   late String endDateStr;
   late bool isPreview;
-
-  Task(this.typeName, this.memo, this.startTimeStr, this.endTimeStr,
-      this.startDateStr, this.endDateStr);
+  late int id;
 
   static double _makeDuration({
     required String startTimeStr,

@@ -52,21 +52,33 @@ final addTaskEndTimeMinuteProvider = StateProvider<String>((ref) {
   return '00';
 });
 
+final changeTaskIdProvider = StateProvider<int?>((ref) => null);
+
+final addTaskIdProvider = StateProvider((ref) => 8); //本来はスケジュールがゼロから始まるから0にする
+
 class UserScheduleNotifier extends StateNotifier<List<Task>> {
   UserScheduleNotifier()
       : super([
-          Task('睡眠', '', '23:00', '05:00', '4/23', '4/24'),
-          Task('ゆったり', 'コーヒーのむ', '06:00', '07:00', '4/24', '4/24'),
-          Task('移動', '袖ヶ浦 → 筑波🚃', '07:00', '10:00', '4/24', '4/24'),
-          Task('勉強', '高橋先生 訪問', '11:00', '12:30', '4/24', '4/24'),
-          Task('ゆったり', '昼食🍔', '12:30', '13:30', '4/24', '4/24'),
-          Task('勉強', '志築先生 訪問', '13:30', '15:00', '4/24', '4/24'),
-          Task('移動', '筑波 → 袖ヶ浦🚃', '16:00', '19:00', '4/24', '4/24'),
-          Task('ゆったり', '本読む', '05:00', '06:00', '4/24', '4/24'),
+          Task('睡眠', '', '23:00', '05:00', '4/23', '4/24', 0),
+          Task('ゆったり', 'コーヒーのむ', '06:00', '07:00', '4/24', '4/24', 1),
+          Task('移動', '袖ヶ浦 → 筑波🚃', '07:00', '10:00', '4/24', '4/24', 2),
+          Task('勉強', '高橋先生 訪問', '11:00', '12:30', '4/24', '4/24', 3),
+          Task('ゆったり', '昼食🍔', '12:30', '13:30', '4/24', '4/24', 4),
+          Task('勉強', '志築先生 訪問', '13:30', '15:00', '4/24', '4/24', 5),
+          Task('移動', '筑波 → 袖ヶ浦🚃', '16:00', '19:00', '4/24', '4/24', 6),
+          Task('ゆったり', '本読む', '05:00', '06:00', '4/24', '4/24', 7),
         ]); //スタートタイムとエンドタイムをDateTime型で表したい
 
   void sortSchedule() {
     //時系列でソートする
+  }
+
+  void removeSchedule(int? id) {
+    //変更の時(changeTaskIndexがnullじゃないときはタスクを削除する)
+    state = [
+      for (final task in state)
+        if (task.id != id) task,
+    ];
   }
 }
 
@@ -137,12 +149,12 @@ class SchedulePage extends ConsumerWidget {
         centerTitle: false,
         actions: [
           /* IconButton(
-               onPressed: () {},
-               icon: const Icon(
-                 Icons.edit,
-                 size: 28,
-                 color: Colors.black,
-               )),*/
+              onPressed: () {},
+              icon: const Icon(
+                Icons.edit,
+                size: 28,
+                color: Colors.black,
+              )),*/
           IconButton(
               onPressed: () async {
                 //初期化する
@@ -300,6 +312,9 @@ class SchedulePageBody extends ConsumerWidget {
                         ref.read(addTaskEndTimeMinuteProvider.notifier).update(
                             (state) =>
                                 userSchedule[index].endTimeStr.split(':')[1]);
+                        ref
+                            .read(changeTaskIdProvider.notifier)
+                            .update((state) => index);
                         await Navigator.push(
                           context,
                           MaterialPageRoute(
