@@ -21,8 +21,10 @@ class AddPage extends ConsumerWidget {
     final taskEndDate = ref.watch(addTaskEndDateProvider);
     final taskEndTimeHour = ref.watch(addTaskEndTimeHourProvider);
     final taskEndTimeMinute = ref.watch(addTaskEndTimeMinuteProvider);
+    final changeTaskId = ref.watch(changeTaskIdProvider);
 
     List<Task> userShedule = ref.read(userSheduleProvider);
+    final addTaskId = ref.watch(addTaskIdProvider);
 
     return Scaffold(
         appBar: AppBar(
@@ -107,9 +109,9 @@ class AddPage extends ConsumerWidget {
                     width: double.infinity,
                     child: ShowTaskTypeList(),
                   ),
-                  TextField(
+                  TextFormField(
                     //memo
-                    controller: TextEditingController(text: addTaskMemo),
+                    initialValue: addTaskMemo,
                     maxLines: 2,
                     decoration: const InputDecoration(
                         labelText: 'Memo',
@@ -229,17 +231,40 @@ class AddPage extends ConsumerWidget {
                   ElevatedButton(
                       //完了ボタン
                       onPressed: () {
-                        userShedule.add(Task(
-                            addTaskName,
-                            addTaskMemo,
-                            '$taskStartTimeHour:$taskStartTimeMinute',
-                            '$taskEndTimeHour:$taskEndTimeMinute',
-                            taskStartDate,
-                            taskEndDate));
-                        ref.read(userSheduleProvider.notifier).state = [
-                          ...userShedule
-                        ];
-                        //sortする
+                        if (changeTaskId == null) {
+                          userShedule.add(Task(
+                              addTaskName,
+                              addTaskMemo,
+                              '$taskStartTimeHour:$taskStartTimeMinute',
+                              '$taskEndTimeHour:$taskEndTimeMinute',
+                              taskStartDate,
+                              taskEndDate,
+                              addTaskId));
+                          ref.read(userSheduleProvider.notifier).state = [
+                            ...userShedule
+                          ];
+                          ref
+                              .read(addTaskIdProvider.notifier)
+                              .update((state) => state = addTaskId + 1);
+                        } else {
+                          userShedule.add(Task(
+                              addTaskName,
+                              addTaskMemo,
+                              '$taskStartTimeHour:$taskStartTimeMinute',
+                              '$taskEndTimeHour:$taskEndTimeMinute',
+                              taskStartDate,
+                              taskEndDate,
+                              addTaskId));
+                          ref
+                              .read(userSheduleProvider.notifier)
+                              .removeSchedule(changeTaskId);
+                          ref
+                              .read(addTaskIdProvider.notifier)
+                              .update((state) => state = addTaskId + 1);
+                          ref
+                              .read(changeTaskIdProvider.notifier)
+                              .update((state) => state = null);
+                        }
                         Navigator.pop(context);
                       },
                       style: ButtonStyle(
