@@ -136,13 +136,13 @@ class SchedulePage extends ConsumerWidget {
         title: createDateTitle(),
         centerTitle: false,
         actions: [
-          // IconButton(
-          //     onPressed: () {},
-          //     icon: const Icon(
-          //       Icons.edit,
-          //       size: 28,
-          //       color: Colors.black,
-          //     )),
+          /* IconButton(
+               onPressed: () {},
+               icon: const Icon(
+                 Icons.edit,
+                 size: 28,
+                 color: Colors.black,
+               )),*/
           IconButton(
               onPressed: () async {
                 //初期化する
@@ -188,32 +188,8 @@ class SchedulePage extends ConsumerWidget {
 Row createDateTitle() {
   var now = DateTime.now();
   var weekDay = now.weekday;
-  String youbi = '';
-
-  switch (weekDay) {
-    case 1:
-      youbi = '月';
-      break;
-    case 2:
-      youbi = '火';
-      break;
-    case 3:
-      youbi = '水';
-      break;
-    case 4:
-      youbi = '木';
-      break;
-    case 5:
-      youbi = '金';
-      break;
-    case 6:
-      youbi = '土';
-      break;
-    case 7:
-      youbi = '日';
-      break;
-  }
-
+  String youbi = '日月火水木金土日';
+  youbi = youbi[weekDay];
   return Row(
     mainAxisAlignment: MainAxisAlignment.start,
     crossAxisAlignment: CrossAxisAlignment.baseline,
