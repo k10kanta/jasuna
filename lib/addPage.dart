@@ -222,7 +222,7 @@ class AddPage extends ConsumerWidget {
                       CreateAddTimeButton(addTime: 5, unit: '分'),
                       CreateAddTimeButton(addTime: 10, unit: '分'),
                       CreateAddTimeButton(addTime: 30, unit: '分'),
-                      CreateAddTimeButton(addTime: 1, unit: '時間'),
+                      CreateAddTimeButton(addTime: 12, unit: '時間'),
                     ],
                   ),
                   const SizedBox(
@@ -299,9 +299,17 @@ class CreateAddTimeButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final taskEndTimeHour = ref.watch(addTaskEndTimeHourProvider);
     final taskEndTimeMinute = ref.watch(addTaskEndTimeMinuteProvider);
+    final taskEndTimeDay = ref.watch(addTaskEndTimeDayProvider);
+    final taskEndTimeMonth = ref.watch(addTaskEndTimeMonthProvider);
+    final taskEndTimeYear = ref.watch(addTaskEndYearProvider);
+
     int newEndTimeMinute = int.parse(taskEndTimeMinute);
     int newEndTimeHour = int.parse(taskEndTimeHour);
+    int newEndTimeDay = int.parse(taskEndTimeDay);
+    int newEndTimeMonth = int.parse(taskEndTimeMonth);
+    int newEndTimeYear = int.parse(taskEndTimeYear);
 
+    List<int> v = [-65536,31,29,31,29,31,30,31,31,30,31,30,31];  //年間で31日まであるのは1、3、5、7、8、10、12月。 残りの2、4、6、9、11月は2月を除き全て30日まで。
     return SizedBox(
       height: 60,
       width: 80,
@@ -333,9 +341,50 @@ class CreateAddTimeButton extends ConsumerWidget {
             } else {
               //追加する単位が時間の時
               newEndTimeHour += addTime;
-              ref
-                  .read(addTaskEndTimeHourProvider.notifier)
-                  .update((state) => state = '$newEndTimeHour'.toString().padLeft(2, '0'));
+              if (newEndTimeHour >= 24) {
+                newEndTimeHour -= 24;
+                newEndTimeDay += 1;
+                /* 月が変わる時 */
+                if(newEndTimeMonth == 2 && (newEndTimeYear%4) != 0 && newEndTimeDay == 29){
+                  newEndTimeDay = 1;
+                  newEndTimeMonth += 1;
+                }
+                else if(v[newEndTimeMonth]<newEndTimeDay){
+                  newEndTimeDay = 1;
+                  /* 更にその中で年が変わる時 */
+                  if(newEndTimeMonth == 12){
+                    newEndTimeMonth = 1;
+                    newEndTimeYear += 1;
+                  }else{
+                    newEndTimeMonth += 1;
+                  }
+                }
+                ref
+                    .read(addTaskEndTimeMonthProvider.notifier)
+                    .update((state) =>
+                '$newEndTimeMonth');
+                ref
+                    .read(addTaskEndDateProvider.notifier)
+                    .update((state) =>
+                 '$newEndTimeMonth/$newEndTimeDay');
+                ref
+                    .read(addTaskEndTimeDayProvider.notifier)
+                    .update((state) =>
+                '$newEndTimeDay');
+                ref
+                    .read(addTaskEndTimeHourProvider.notifier)
+                    .update((state) =>
+                state = '$newEndTimeHour'.toString().padLeft(2, '0'));
+                ref
+                    .read(addTaskEndYearProvider.notifier)
+                    .update((state) =>
+                '$newEndTimeYear');
+              }else {
+                ref
+                    .read(addTaskEndTimeHourProvider.notifier)
+                    .update((state) =>
+                state = '$newEndTimeHour'.toString().padLeft(2, '0'));
+              }
             }
           },
           child: Row(

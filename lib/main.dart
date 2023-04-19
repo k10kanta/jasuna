@@ -48,6 +48,15 @@ final addTaskEndTimeHourProvider = StateProvider<String>((ref) {
   return '${DateTime.now().hour}';
 });
 
+final addTaskEndTimeDayProvider = StateProvider<String>((ref) {
+  return '${DateTime.now().day}';
+});
+final addTaskEndTimeMonthProvider = StateProvider<String>((ref) {
+  return '${DateTime.now().month}';
+});
+final addTaskEndTimeYearProvider = StateProvider<String>((ref) {
+  return '${DateTime.now().year}';
+});
 final addTaskEndTimeMinuteProvider = StateProvider<String>((ref) {
   return '00';
 });
