@@ -144,7 +144,7 @@ class AddPage extends ConsumerWidget {
                                 .update((state) => "${time.month}/${time.day}");
                             ref
                                 .read(addTaskStartTimeHourProvider.notifier)
-                                .update((state) => "${time.hour}");
+                                .update((state) => "${time.hour}".padLeft(2, '0'));// fixed from @Sakatuki_jugyou 2023/04/19 (Wed)  [add .padLeft(2, '0')]
                             ref
                                 .read(addTaskStartTimeMinuteProvider.notifier)
                                 .update((state) => "${time.minute}".padLeft(2, '0')); // fixed from @Sakatuki_jugyou 2023/04/19 (Wed)  [add .padLeft(2, '0')]
@@ -153,7 +153,7 @@ class AddPage extends ConsumerWidget {
                                 .update((state) => "${time.month}/${time.day}");
                             ref
                                 .read(addTaskEndTimeHourProvider.notifier)
-                                .update((state) => "${time.hour}");
+                                .update((state) => "${time.hour}".padLeft(2, '0'));// fixed from @Sakatuki_jugyou 2023/04/19 (Wed)  [add .padLeft(2, '0')]
                             ref
                                 .read(addTaskEndTimeMinuteProvider.notifier)
                                 .update((state) => "${time.minute}".padLeft(2, '0')); // fixed from @Sakatuki_jugyou 2023/04/19 (Wed)  [add .padLeft(2, '0')]
@@ -191,7 +191,7 @@ class AddPage extends ConsumerWidget {
                                 .update((state) => "${time.month}/${time.day}");
                             ref
                                 .read(addTaskEndTimeHourProvider.notifier)
-                                .update((state) => "${time.hour}");
+                                .update((state) => "${time.hour}".padLeft(2, '0'));// fixed from @Sakatuki_jugyou 2023/04/19 (Wed)  [add .padLeft(2, '0')]
                             ref
                                 .read(addTaskEndTimeMinuteProvider.notifier)
                                 .update((state) => "${time.minute}".padLeft(2, '0'));// fixed from @Sakatuki_jugyou 2023/04/19 (Wed)  [add .padLeft(2, '0')]
@@ -324,7 +324,7 @@ class CreateAddTimeButton extends ConsumerWidget {
                     .update((state) => "${newEndTimeMinute}".toString().padLeft(2, '0'));
                 ref
                     .read(addTaskEndTimeHourProvider.notifier)
-                    .update((state) => state = '$newEndTimeHour');
+                    .update((state) => state = '$newEndTimeHour'.toString().padLeft(2, '0'));
               } else {
                 ref
                     .read(addTaskEndTimeMinuteProvider.notifier)
@@ -335,7 +335,7 @@ class CreateAddTimeButton extends ConsumerWidget {
               newEndTimeHour += addTime;
               ref
                   .read(addTaskEndTimeHourProvider.notifier)
-                  .update((state) => state = '$newEndTimeHour');
+                  .update((state) => state = '$newEndTimeHour'.toString().padLeft(2, '0'));
             }
           },
           child: Row(
