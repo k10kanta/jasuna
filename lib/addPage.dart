@@ -28,7 +28,7 @@ class AddPage extends ConsumerWidget {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           toolbarHeight: 40,
-          leading: IconButton(
+          leading: IconButton (
             icon: const Icon(Icons.arrow_back),
             color: Colors.black,
             onPressed: () async {
@@ -135,6 +135,7 @@ class AddPage extends ConsumerWidget {
                               showTitleActions: true,
                               minTime: DateTime(2022, 1, 1),
                               maxTime: DateTime(2030, 12, 31),
+                              currentTime: DateTime.now(),
                               onConfirm: (time) {
                             ref
                                 .read(addTaskStartDateProvider.notifier)
@@ -144,7 +145,7 @@ class AddPage extends ConsumerWidget {
                                 .update((state) => "${time.hour}");
                             ref
                                 .read(addTaskStartTimeMinuteProvider.notifier)
-                                .update((state) => "${time.minute}");
+                                .update((state) => "${time.minute}".padLeft(2, '0')); // fixed from @Sakatuki_jugyou 2023/04/19 (Wed)  [add .padLeft(2, '0')]
                             ref
                                 .read(addTaskEndDateProvider.notifier)
                                 .update((state) => "${time.month}/${time.day}");
@@ -153,14 +154,8 @@ class AddPage extends ConsumerWidget {
                                 .update((state) => "${time.hour}");
                             ref
                                 .read(addTaskEndTimeMinuteProvider.notifier)
-                                .update((state) => "${time.minute}");
+                                .update((state) => "${time.minute}".padLeft(2, '0')); // fixed from @Sakatuki_jugyou 2023/04/19 (Wed)  [add .padLeft(2, '0')]
                           },
-                              currentTime: DateTime(
-                                  int.parse(taskStartYear),
-                                  int.parse(taskStartDate.split('/')[0]),
-                                  int.parse(taskStartDate.split('/')[1]),
-                                  int.parse(taskStartTimeHour),
-                                  00),
                               locale: LocaleType.jp);
                         },
                         child: Column(children: [
@@ -187,6 +182,7 @@ class AddPage extends ConsumerWidget {
                               showTitleActions: true,
                               minTime: DateTime(2022, 1, 1),
                               maxTime: DateTime(2030, 12, 31),
+                              currentTime: DateTime.now(),
                               onConfirm: (time) {
                             ref
                                 .read(addTaskEndDateProvider.notifier)
@@ -196,14 +192,8 @@ class AddPage extends ConsumerWidget {
                                 .update((state) => "${time.hour}");
                             ref
                                 .read(addTaskEndTimeMinuteProvider.notifier)
-                                .update((state) => "${time.minute}");
+                                .update((state) => "${time.minute}".padLeft(2, '0')); // fixed from @Sakatuki_jugyou 2023/04/19 (Wed)  [add .padLeft(2, '0')]
                           },
-                              currentTime: DateTime(
-                                  int.parse(taskEndYear),
-                                  int.parse(taskEndDate.split('/')[0]),
-                                  int.parse(taskEndDate.split('/')[1]),
-                                  int.parse(taskEndTimeHour),
-                                  00),
                               locale: LocaleType.jp);
                         },
                         child: Column(children: [
