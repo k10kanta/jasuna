@@ -71,8 +71,8 @@ class UserScheduleNotifier extends StateNotifier<List<Task>> {
 
   void sortSchedule() {
     //時系列でソートする
-    state.sort(((a, b) => (a.startDateStr + a.startTimeStr)
-        .compareTo(b.startDateStr + b.startTimeStr)));
+    state.sort(((a, b) => ("${a.startDateStr}-${a.startTimeStr}")
+        .compareTo("${b.startDateStr}-${b.startTimeStr}")));
   }
 
   void removeSchedule(int? id) {
